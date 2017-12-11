@@ -1,0 +1,10 @@
+{
+	"indexes": [
+		{
+			"collectionId": "timecards",
+			"fields": [
+				{ "fieldPath": "foo", "mode": "ASCENDING"}
+			]
+		}
+	]
+}

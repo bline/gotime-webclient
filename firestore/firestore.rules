@@ -1,0 +1,42 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function hasPerm(perm) {
+      return perm in request.auth.token.permissions;
+    }
+    function hasAnyPerms(perms) {
+      return request.auth.token.permissions.hasAny(perms);
+    }
+    function hasAllPerms(perms) {
+      return request.auth.token.permissions.hasAll(perms);
+    }
+
+    match /{documents=*} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /users/{multi_path=**} {
+      allow read: if 'read-any:user' in request.auth.token.permissions;
+      allow update: if 'update-any:user' in request.auth.token.permissions;
+    }
+    match /groups/{multi_path=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /timecards/{multi_path=**} {
+      allow read: if 'read-any:timecard' in request.auth.token.permissions;
+      allow write: if 'update-any:timecard' in request.auth.token.permissions;
+    }
+    match /clocktime/{userId}/{documents=*} {
+      allow create: if request.auth.uid == userId;
+    }
+    match /clocktime/{userId}/{entryDate}/{documents=*} {
+      allow write: if 'update-any:timecard' in request.auth.token.permissions;
+      allow read: if request.auth.token.permissions.hasAny(['read:reposts', 'read-any:timecards']);
+    }
+    match /users/{userId}/{document=**} {
+      allow read: if request.auth.uid == userId;
+      allow write: if false;
+    }
+  }
+}
