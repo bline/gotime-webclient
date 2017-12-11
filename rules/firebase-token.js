@@ -42,23 +42,21 @@ function (user, context, callback) {
     console.log("Failed to create user '" + user.email + "': ", error);
     callback(error, user, context);
   };
-  getToken().then(function () {
-    getUser(uid).then(function (user) {
-      console.log("got user: ", user);
-      if (typeof user.localId === 'undefined' || user.localId === null) {
-        createUser().then(function (uid) {
-          createFirebaseToken(user, context, callback);
-        }).catch(errorCreateUser);
-      } else {
-        createFirebaseToken(user, context, callback);
-      }
-    }).catch(function (error) {
-      console.log("No user");
-      console.log("Failed to get user '" + user.email + "': ", error);
+  getUser(uid).then(function (fbuser) {
+    console.log("got user: ", user);
+    if (typeof fbuser.localId === 'undefined' || fbuser.localId === null) {
       createUser().then(function (uid) {
         createFirebaseToken(user, context, callback);
       }).catch(errorCreateUser);
-    });
+    } else {
+      createFirebaseToken(user, context, callback);
+    }
+  }).catch(function (error) {
+    console.log("No user");
+    console.log("Failed to get user '" + user.email + "': ", error);
+    createUser().then(function (uid) {
+      createFirebaseToken(user, context, callback);
+    }).catch(errorCreateUser);
   });
   function createUser() {
     var newUser = {
