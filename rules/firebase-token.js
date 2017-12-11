@@ -1,5 +1,8 @@
-// Testing github hook
 function (user, context, callback) {
+	console.log("Connection: ", context.connection);
+  if (context.connection === 'Helpdesk') {
+	  return callback(null, user, context);
+  }
   var GOOGLE_TOKEN_AUDIENCE = 'https://accounts.google.com/o/oauth2/token';
   var GOOGLE_AUTH_TOKEN_HOST = 'accounts.google.com';
   var GOOGLE_AUTH_TOKEN_PATH = '/o/oauth2/token';
@@ -164,7 +167,7 @@ function (user, context, callback) {
   }
   function createFirebaseToken(user, context, callback) {
     var customToken = createCustomToken(uid, additionalClaims);
-    // context.idToken[namespace + 'firebase_custom_token'] = customToken;
+    context.idToken[namespace + 'firebase_custom_token'] = customToken;
     callback(null, user, context);
   }
   function invokeRequestHandler(method, req) {
