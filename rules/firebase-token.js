@@ -1,8 +1,5 @@
 function (user, context, callback) {
-	console.log("Connection: ", context.connection);
-  if (context.connection === 'Helpdesk') {
-	  return callback(null, user, context);
-  }
+	console.log("Context: ", context);
   var GOOGLE_TOKEN_AUDIENCE = 'https://accounts.google.com/o/oauth2/token';
   var GOOGLE_AUTH_TOKEN_HOST = 'accounts.google.com';
   var GOOGLE_AUTH_TOKEN_PATH = '/o/oauth2/token';
@@ -45,6 +42,9 @@ function (user, context, callback) {
     console.log("Failed to create user '" + user.email + "': ", error);
     callback(error, user, context);
   };
+  if (context.connection === 'Helpdesk') {
+	  return callback(null, user, context);
+  }
   getUser(uid).then(function (user) {
     if (typeof user.localId === 'undefined' || user.localId === null) {
       createUser().then(function (uid) {
