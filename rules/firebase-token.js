@@ -164,7 +164,7 @@ function (user, context, callback) {
   }
   function createFirebaseToken(user, context, callback) {
     var customToken = createCustomToken(uid, additionalClaims);
-    context.idToken[namespace + 'firebase_custom_token'] = customToken;
+    // context.idToken[namespace + 'firebase_custom_token'] = customToken;
     callback(null, user, context);
   }
   function invokeRequestHandler(method, req) {
