@@ -1,3 +1,4 @@
+// Testing github hook
 function (user, context, callback) {
   var GOOGLE_TOKEN_AUDIENCE = 'https://accounts.google.com/o/oauth2/token';
   var GOOGLE_AUTH_TOKEN_HOST = 'accounts.google.com';
