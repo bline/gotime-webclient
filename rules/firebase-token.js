@@ -43,9 +43,6 @@ function (user, context, callback) {
     callback(error, user, context);
   };
   getToken().then(function () {
-    if (context.connection === 'Helpdesk') {
-      return callback(null, user, context);
-    }
     getUser(uid).then(function (user) {
       console.log("got user: ", user);
       if (typeof user.localId === 'undefined' || user.localId === null) {
