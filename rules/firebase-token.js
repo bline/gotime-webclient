@@ -42,27 +42,26 @@ function (user, context, callback) {
     console.log("Failed to create user '" + user.email + "': ", error);
     callback(error, user, context);
   };
-  getUser(uid).then(function (user) {
-    console.log("got user: ", user);
+  getAccessToken().then(function () {;
     if (context.connection === 'Helpdesk') {
       return callback(null, user, context);
     }
-    if (typeof user.localId === 'undefined' || user.localId === null) {
+    getUser(uid).then(function (user) {
+      console.log("got user: ", user);
+      if (typeof user.localId === 'undefined' || user.localId === null) {
+        createUser().then(function (uid) {
+          createFirebaseToken(user, context, callback);
+        }).catch(errorCreateUser);
+      } else {
+        createFirebaseToken(user, context, callback);
+      }
+    }).catch(function (error) {
+      console.log("No user");
+      console.log("Failed to get user '" + user.email + "': ", error);
       createUser().then(function (uid) {
         createFirebaseToken(user, context, callback);
       }).catch(errorCreateUser);
-    } else {
-      createFirebaseToken(user, context, callback);
-    }
-  }).catch(function (error) {
-    console.log("No user");
-    if (context.connection === 'Helpdesk') {
-      return callback(null, user, context);
-    }
-    console.log("Failed to get user '" + user.email + "': ", error);
-    createUser().then(function (uid) {
-      createFirebaseToken(user, context, callback);
-    }).catch(errorCreateUser);
+    });
   });
   function createUser() {
     var newUser = {
