@@ -42,7 +42,7 @@ function (user, context, callback) {
     console.log("Failed to create user '" + user.email + "': ", error);
     callback(error, user, context);
   };
-  getAccessToken().then(function () {;
+  getToken().then(function () {
     if (context.connection === 'Helpdesk') {
       return callback(null, user, context);
     }
