@@ -169,7 +169,7 @@ function (user, context, callback) {
     callback(null, user, context);
   }
   function firebaseError(err) {
-	  error = new Error(err.message);
+	  var error = new Error(err.message);
 	  error.code = err.code;
 	  return error;
   }
