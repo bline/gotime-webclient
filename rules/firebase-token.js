@@ -166,6 +166,7 @@ function (user, context, callback) {
     callback(null, user, context);
   }
   function invokeRequestHandler(method, req) {
+    console.log("Invode: " + method);
     var headers = _.clone(FIREBASE_AUTH_HEADER);
     return getToken().then(function (token) {
       headers['Authorization'] = 'Bearer ' + token.accessToken;
@@ -183,12 +184,16 @@ function (user, context, callback) {
             return;
           }
           var statusCode = response.statusCode || 200;
+          var errorMessages = [];
           if (json.error) {
             console.log("json: ", json);
-            var errorMessage = 'Error fetching access token: ' + json.error.errors.join("; ");
-            if (json.error_description) {
-              errorMessage += ' (' + json.error_description + ')';
-            }
+            json.error.errors.forEach(e => {
+              console.log("Firebase Error: ", e);
+              errorMessages.push(e.toString());
+            });
+            var errorMessage = 'Error fetching access token: ' + errorMessages.join("; ");
+            errorMessgae += `(${json.error.code}:${json.error.message})`;
+            console.log("Error: " + errorMessage);
             reject(new Error(errorMessage));
           } else if (statusCode < 200 || statusCode > 300) {
             console.log("json: ", json);
