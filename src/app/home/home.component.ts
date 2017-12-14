@@ -11,6 +11,7 @@ export class HomeComponent implements OnInit {
   constructor(public auth: AuthService) { }
 
   ngOnInit() {
+    this.auth.renew();
   }
 
 }
