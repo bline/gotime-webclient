@@ -39,7 +39,10 @@ function (user, context, callback) {
 
   var errorCreateUser = function (error) {
     console.log("Failed to create user '" + user.email + "': ", error);
-    callback(error, user, context);
+	if (error.code === 400 && error.message === 'EMAIL_EXISTS')
+        createFirebaseToken(user, context, callback);
+	else
+    	callback(error, user, context);
   };
   getUser(uid).then(function (fbuser) {
     if (typeof fbuser.localId === 'undefined' || fbuser.localId === null) {
@@ -77,7 +80,7 @@ function (user, context, callback) {
     return invokeRequestHandler('signupNewUser', newUser)
       .then(function (response) {
         return response.localId;
-      });
+      })
   }
   function getUser(uid) {
     var requestInfo = {
