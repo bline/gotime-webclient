@@ -1,0 +1,12 @@
+<button type="button" *ngIf="!auth.isAuthenticated()" (click)="auth.login()" class="btn btn-default navbar-btn">Sign in</button>
+<li *ngIf="auth.isAuthenticated()"><a href="#"><img alt="{{auth.userProfile.}}account" ng-src="{{auth.userProfile.picture}}?sz=32" /></a></li>
+<li class="dropdown" *ngIf="auth.isAuthenticated()">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+  <ul class="dropdown-menu">
+    <li><img alt="account" ng-src="{{auth.userProfile.picture}}?sz=96" /></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</li>
