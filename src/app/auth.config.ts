@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
 }
 
 export const renewOptions: RenewAuthOptions = {
-  redirectUri: window.location.origin + '/',
+  redirectUri: window.location.origin + '/silent',
   timeout: 1000 * 90,
   responseMode: 'fragment'
 };

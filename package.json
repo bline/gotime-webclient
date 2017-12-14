@@ -1,11 +1,14 @@
 {
-  "name": "gotime",
-  "version": "0.0.0",
+  "name": "Gotime",
+  "version": "0.1.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve --base-href / --deploy-url / --host gotime.shambhalamountain.org --ssl true --ssl-key ~/.private/smc.key --ssl-cert ~/.private/smc.crt --port 8443",
+    "build-prod": "ng build --base-href='/' --environment=prod --deploy-url='/' --output-path=public",
+    "build-dev": "ng build --base-href='/' --environment=dev --deploy-url='/' --output-path=public-dev",
+    "deploy-prod": "firebase deploy --only hosting",
+    "deploy-dev": "firebase deploy -p public-dev -P smc-internal-dev --only hosting",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -22,9 +25,13 @@
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
     "@types/auth0-js": "^8.11.0",
+    "@types/firebase": "^2.4.32",
+    "angularfire2": "^5.0.0-rc.4",
     "auth0-js": "^8.12.0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.1",
+    "firebase-admin": "latest",
+    "gulp": "^3.9.1",
     "karma-firefox-launcher": "^1.0.1",
     "rxjs": "^5.5.5",
     "zone.js": "^0.8.18"
@@ -48,6 +55,10 @@
     "protractor": "^5.1.2",
     "ts-node": "^3.2.2",
     "tslint": "^5.7.0",
-    "typescript": "^2.4.2"
-  }
+    "typescript": ">=2.4.2 <2.6"
+  },
+  "description": "Time-card web service",
+  "main": "index.js",
+  "repository": "https://github.com/bline/gotime-webclient.git",
+  "author": "Scott Beck <sbeck@shambhalamountain.org>"
 }

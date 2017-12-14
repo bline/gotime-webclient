@@ -1,0 +1,54 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function hasOwnerPerm(uid, perms) {
+      return isOwner(uid) && request.auth.token.permissions.hasAny(perms);
+    }
+    function hasPerm(perms) {
+      return request.auth.token.permissions.hasAny(perms);
+    }
+    function hasAllPerm(perms) {
+      return request.auth.token.permissions.hasAll(perms);
+    }
+    function isOwner(uid) {
+        return request.auth.uid == uid;
+    }
+    function isManager(uid) {
+        return get(/databases/$(database)/documents/users/$(uid)).managers[request.auth.uid] == true;
+    }
+    function hasAuth() {
+        return request.auth != null;
+    }
+
+    // No access by default
+    match /{documents=*} {
+      allow read: if false;
+      allow write: if false;
+    }
+    match /users/{multi_path=**} {
+      allow read: if hasPerm(['read-any:user', 'manage:users']);
+      allow update: if hasPerm(['update-any:user', 'manage:users']);
+    }
+    match /users/{userId} {
+      allow read: if hasOwnerPerm(userId, ['read-own:user']);
+      allow update: if hasOwnerPerm(userId, ['write-own:user']);
+    }
+    match /users/{userId}/clockedTime/{document} {
+        allow write: if hasOwnerPerm(userId, ['write-own:clocktime'])
+                     || hasPerm(['manage:users']);
+        allow read: if hasOwnerPerm(userId, ['read-own:clocktime']);
+    }
+    match /groups/{multi_path=**} {
+      allow read: if hasAuth();
+      allow write: if false;
+    }
+    match /timecards/{multi_path=**} {
+      allow read: if hasPerm(['read-any:timecard', 'manage:timecards']);
+      allow write: if hasPerm(['update-any:timecard', 'manage:timecards']);
+    }
+    match /timecards/{tcId} {
+        allow update: if hasOwnerPerm(resource.data.userId, ['write-own:timecard']);
+        allow read: if hasOwnerPerm(resource.data.userId, ['read-own:timecard']);
+    }
+  }
+}

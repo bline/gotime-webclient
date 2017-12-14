@@ -12,13 +12,15 @@ import { ROUTES } from './app.routes';
 import { AuthService } from './auth.service';
 import { PrivateComponent } from './private/private.component';
 import { SilentCallbackComponent } from './silent-callback/silent-callback.component';
+import { NavAccountComponent } from './nav-account/nav-account.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SilentCallbackComponent,
-    PrivateComponent
+    PrivateComponent,
+    NavAccountComponent
   ],
   imports: [
     BrowserModule,
