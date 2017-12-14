@@ -34,7 +34,7 @@ function (user, context, callback) {
   var additionalClaims = {
     permissions: user.permissions
   };
-  var uid = md5(user.email);
+  var uid = md5(user.user_id);
   var cert = JSON.parse(configuration['firebase-cert']);
 
   var errorCreateUser = function (error) {
