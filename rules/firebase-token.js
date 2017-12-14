@@ -192,7 +192,7 @@ function (user, context, callback) {
               errorMessages.push(e.toString());
             });
             var errorMessage = 'Error fetching access token: ' + errorMessages.join("; ");
-            errorMessgae += `(${json.error.code}:${json.error.message})`;
+            errorMessage += `(${json.error.code}:${json.error.message})`;
             console.log("Error: " + errorMessage);
             reject(new Error(errorMessage));
           } else if (statusCode < 200 || statusCode > 300) {
