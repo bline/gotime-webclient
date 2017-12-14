@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "smc-internal",
+    "production": "smc-internal"
+  }
+}
