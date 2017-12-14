@@ -1,0 +1,29 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase serve --only functions",
+    "shell": "firebase experimental:functions:shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "NODE_ENV=TEST mocha test/index_spec.js",
+    "start": "node wipeout_init.js"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "deepcopy": "^0.6.3",
+    "ejs": "^2.5.7",
+    "firebase-admin": "^4.2.1",
+    "firebase-functions": "^0.5.9",
+    "jsep": "^0.3.2",
+    "mocha": "^3.5.3",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "sinon": "^2.4.1",
+    "sinon-stub-promise": "^4.0.0",
+    "strip-json-comments": "^2.0.1"
+  },
+  "private": true
+}
