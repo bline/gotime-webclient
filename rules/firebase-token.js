@@ -168,6 +168,11 @@ function (user, context, callback) {
     context.idToken[namespace + 'firebase_custom_token'] = customToken;
     callback(null, user, context);
   }
+  function firebaseError(err) {
+	  error = new Error(err.message);
+	  error.code = err.code;
+	  return error;
+  }
   function invokeRequestHandler(method, req) {
     console.log("Invode: " + method);
     var headers = _.clone(FIREBASE_AUTH_HEADER);
@@ -189,15 +194,8 @@ function (user, context, callback) {
           var statusCode = response.statusCode || 200;
           var errorMessages = [];
           if (json.error) {
-            console.log("json: ", json);
-            json.error.errors.forEach(e => {
-              console.log("Firebase Error: ", e);
-              errorMessages.push(e.toString());
-            });
-            var errorMessage = 'Error fetching access token: ' + errorMessages.join("; ");
-            errorMessage += `(${json.error.code}:${json.error.message})`;
-            console.log("Error: " + errorMessage);
-            reject(new Error(errorMessage));
+            console.log("Error: ", json.error);
+            reject(firebaseError(json.error));
           } else if (statusCode < 200 || statusCode > 300) {
             console.log("json: ", json);
             reject({
@@ -301,12 +299,8 @@ function (user, context, callback) {
           var json = JSON.parse(body);
           if (_.isArray(json))
             json = json[0];
-          if (json.error && json.error.errors.length) {
-            var errorMessage = 'Error fetching access token: ' + json.error.errors.join("; ");
-            if (json.error_description) {
-              errorMessage += ' (' + json.error_description + ')';
-            }
-            reject(new Error(errorMessage));
+          if (json.error) {
+            reject(firebaseError(json.error));
           }
           else if (!json.access_token || !json.expires_in) {
             reject(new Error("Unexpected response while fetching access token: " + JSON.stringify(json)));
