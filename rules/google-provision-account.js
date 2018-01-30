@@ -124,20 +124,22 @@ function (user, context, callback) {
     var user = this._user;
     this.fetchToken(function (err, access_token) {
       if (err) return callback(err);
-      var addMemberUrl = 'https://www.googleapis.com/admin/directory/v1/groups/' + encodeURIComponent(group) + '/members/' + encodeURIComponent(user.email);
+      var addMemberUrl = 'https://www.googleapis.com/admin/directory/v1/groups/' + encodeURIComponent(group) + '/members';
+      console.log("Add Member Url: " + addMemberUrl);
       request.put({
         url: addMemberUrl,
         headers: {
           "Authorization": "OAuth " + access_token
         },
         json: {
+          email: user.email,
           role: "MEMBER"
         }
       }, function (err, resp, body) {
         if (err) return callback(err, false);
         var result = body;
         if (result.error) {
-          console.log("Error: ", result);
+          console.log("Error: ", result.error);
           return callback(result.error, false);
         }
         console.log("AddGroup Res: ", result);
