@@ -126,7 +126,7 @@ function (user, context, callback) {
       if (err) return callback(err);
       var addMemberUrl = 'https://www.googleapis.com/admin/directory/v1/groups/' + encodeURIComponent(group) + '/members';
       console.log("Add Member Url: " + addMemberUrl);
-      request.put({
+      request.post({
         url: addMemberUrl,
         headers: {
           "Authorization": "OAuth " + access_token
