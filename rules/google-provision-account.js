@@ -138,7 +138,7 @@ function (user, context, callback) {
     var user = this._user;
     this.fetchToken(function (err, access_token) {
       if (err) return callback(err);
-      var pass = crypto.randomBytes(100).toString('hex');
+      var pass = crypto.randomBytes(20).toString('hex');
       var createUserUrl = 'https://www.googleapis.com/admin/directory/v1/users';
       var familyName = user.family_name || user.name;
       var givenName = user.given_name || user.name;
