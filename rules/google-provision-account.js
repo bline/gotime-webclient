@@ -85,6 +85,8 @@ function (user, context, callback) {
           console.log(result);
           return callback(result.error, false);
         }
+        console.log("Results: ", result);
+        console.log("Response: ", resp);
         callback(null, true);
       });
     });
