@@ -92,16 +92,26 @@ function (user, context, callback) {
   Ctrl.prototype.addToGroups = function (groups, callback) {
     ctrl = this;
     async.eachSeries(groups, function (group, callback) {
+      console.log("Checking " + group);
       ctrl.hasGroupMembership(group, function (err, isMember) {
         if (err || !isMember) {
+          if (err) {
+            console.log("Error getting group: " + err);
+          }
+          console.log("Adding membership");
           ctrl.addGroupMembership(group, function (err, success) {
             if (err) {
               console.log("Add group " + group + "; error: ", err);
             }
+            else {
+              console.log("Success");
+            }
             callback(null);
           });
-        } else
+        } else {
+          console.log("Already member");
           callback(null);
+        }
       });
     }, function (err) {
       if (err) {
@@ -127,9 +137,10 @@ function (user, context, callback) {
         if (err) return callback(err, false);
         var result = body;
         if (result.error) {
-          console.log(result);
+          console.log("Error: ", result);
           return callback(result.error, false);
         }
+        console.log("AddGroup Res: ", result);
         callback(null, result);
       });
     });
