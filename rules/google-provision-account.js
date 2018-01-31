@@ -1,5 +1,6 @@
 function (user, context, callback) {
   var
+    _      = require('lodash'),
     crypto = require('crypto'),
     async  = require('async');
 
@@ -201,10 +202,27 @@ function (user, context, callback) {
           return callback(null, user, context);
         } else {
           console.log("Created: ", guser);
-          ctrl.addToGroups(STDGROUPS, function (err) {
+          var adProfile = _.find(user.identities, { provider: 'ad' });
+          var adGroups;
+          if (adProfile && adProfile.groups) {
+            adGroups = adProfile.groups;
+          } else if (user.groups) {
+            adGroups = user.groups;
+          }
+          var groups = STDGROUPS.slice(0);
+          if (adGroups) {
+            if (_.indexOf(adGroups, 'Director') > -1) {
+              groups = groups.concat(DIRGROUPS);
+            } else if (_.indexOf(adGroups, 'Manager') > -1) {
+              groups = groups.concat(MGRGROUPS);
+            }
+          }
+          ctrl.addToGroups(groups, function (err) {
             if (err) {
               console.log("Add groups error: " + err);
             }
+            user.app_metadata.googleProvisioned = true;
+            auth0.users.updateAppMetadata(user.user_id, user.app_metadata);
             return callback(null, user, context);
           });
         }
