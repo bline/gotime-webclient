@@ -15,7 +15,7 @@ function (user, context, callback) {
 
   context.accessToken = context.accessToken || {};
   context.idToken = context.accessToken || {};
-  var namespace = 'urn:smc:zendesk:';
+  var namespace = 'https://shambhalamountain.zendesk.com/';
   // Sign the token and add it to the profile
   var zendesk_token = jwt.sign(payload, configuration.ZENDESK_JWT_SECRET);
   var key = namespace + 'zendesk_jwt_url';
