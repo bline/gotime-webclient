@@ -10,6 +10,7 @@ function (user, context, callback) {
     jti: uuid.v4(),
     email: user.email,
     name: user.name,
+    role: 'agent',
     external_id: user.user_id
   };
 
