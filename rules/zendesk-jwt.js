@@ -14,10 +14,12 @@ function (user, context, callback) {
   };
 
   context.accessToken = context.accessToken || {};
+  context.idToken = context.accessToken || {};
   var namespace = 'urn:smc:zendesk:';
   // Sign the token and add it to the profile
   var zendesk_token = jwt.sign(payload, configuration.ZENDESK_JWT_SECRET);
-  context.accessToken[namespace + 'zendesk_jwt_url'] = 'https://' + configuration.ZENDESK_SUBDOMAIN + '.zendesk.com/access/jwt?jwt=' + zendesk_token;
+  var key = namespace + 'zendesk_jwt_url';
+  context.idToken[key] = context.accessToken[key] = 'https://' + configuration.ZENDESK_SUBDOMAIN + '.zendesk.com/access/jwt?jwt=' + zendesk_token;
 
   callback(null, user, context);
 }
