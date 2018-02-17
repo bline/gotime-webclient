@@ -13,6 +13,7 @@ function (user, context, callback) {
     external_id: user.user_id
   };
 
+  context.accessToken = context.accessToken || {};
   var namespace = 'urn:smc:zendesk:';
   // Sign the token and add it to the profile
   var zendesk_token = jwt.sign(payload, configuration.ZENDESK_JWT_SECRET);
