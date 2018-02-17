@@ -13,9 +13,10 @@ function (user, context, callback) {
     external_id: user.user_id
   };
 
+  var namespace = 'urn:smc:zendesk:';
   // Sign the token and add it to the profile
   var zendesk_token = jwt.sign(payload, configuration.ZENDESK_JWT_SECRET);
-  user.zendesk_jwt_url = 'https://' + configuration.ZENDESK_SUBDOMAIN + '.zendesk.com/access/jwt?jwt=' + zendesk_token;
+  context.idToken[namespace + 'zendesk_jwt_url'] = 'https://' + configuration.ZENDESK_SUBDOMAIN + '.zendesk.com/access/jwt?jwt=' + zendesk_token;
 
   callback(null, user, context);
 }
