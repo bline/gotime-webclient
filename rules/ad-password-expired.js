@@ -24,7 +24,10 @@ function (user, context, callback) {
     var token = createToken(CLIENT_ID, CLIENT_SECRET, ISSUER, {
       sub: user.user_id,
       email: user.email,
+      emails: user.emails,
+      validated: false,
       sAMAccountName: user.sAMAccountName,
+      picture: user.picture,
       ip: context.request.ip
     });
 
@@ -75,20 +78,25 @@ function (user, context, callback) {
   // Generate a JWT.
   function createToken(client_id, client_secret, issuer, user) {
     var options = {
+      algorithm: 'HS256',
       expiresInMinutes: 5,
       audience: client_id,
       issuer: issuer
     };
 
-    var token = jwt.sign(user, 
-      new Buffer(client_secret, 'base64'), options);
+    var token = jwt.sign(user, client_secret, options);
     return token;
   }
   
   // Verify a JWT.
   function verifyToken(client_id, client_secret, issuer, token, cb) {
-    var secret = new Buffer(client_secret, 'base64').toString('binary');
-    var token_description = { audience: client_id, issuer: issuer };
+    var secret = client_secret;
+    var token_description = {
+      algorithms: ['HS256'],
+      maxAge: "1h",
+      audience: client_id,
+      issuer: issuer
+    };
     
     jwt.verify(token, secret, token_description, cb);
   }
