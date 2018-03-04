@@ -21,12 +21,14 @@ function (user, context, callback) {
     }
     
     // Create token for the external site.
+    var sAMAccountName = user.sAMAccountName || user.username;
+    var email = user.email || sAMAccountName + '@shambhalamountain.org';
     var token = createToken(CLIENT_ID, CLIENT_SECRET, ISSUER, {
       sub: user.user_id,
-      email: user.email,
+      email: email,
       emails: user.emails,
       validated: false,
-      sAMAccountName: user.sAMAccountName,
+      sAMAccountName: sAMAccountName,
       picture: user.picture,
       ip: context.request.ip
     });
