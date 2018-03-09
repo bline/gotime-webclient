@@ -6,7 +6,7 @@ function (user, context, callback) {
   
   var ISSUER = 'https://shambhalamountain.auth0.com/';
   var CLIENT_ID = configuration.ADCP_CLIENT_ID;
-  var CLIENT_SECRET = configuration.ADCP_CLIENT_SECRET;
+  var CLIENT_SECRET = JSON.parse(configuration.ADCP_CLIENT_SECRET);
   var REDIRECT_TO = configuration.ADCP_REDIRECT_TO;
   var MAX_PASSWORD_AGE = configuration.ADCP_MAX_PASS_AGE;
 
@@ -80,8 +80,8 @@ function (user, context, callback) {
   // Generate a JWT.
   function createToken(client_id, client_secret, issuer, user) {
     var options = {
-      algorithm: 'HS256',
-      expiresInMinutes: 5,
+      algorithm: 'RS256',
+      expiresInMinutes: 90,
       audience: client_id,
       issuer: issuer
     };
@@ -94,8 +94,8 @@ function (user, context, callback) {
   function verifyToken(client_id, client_secret, issuer, token, cb) {
     var secret = client_secret;
     var token_description = {
-      algorithms: ['HS256'],
-      maxAge: "1h",
+      algorithms: ['RS256'],
+      maxAge: "3h",
       audience: client_id,
       issuer: issuer
     };
