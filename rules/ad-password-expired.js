@@ -6,7 +6,7 @@ function (user, context, callback) {
   
   var ISSUER = 'https://shambhalamountain.auth0.com/';
   var CLIENT_ID = configuration.ADCP_CLIENT_ID;
-  var CLIENT_SECRET = JSON.parse(configuration.ADCP_CLIENT_SECRET).secret;
+  var CLIENT_SECRET = JSON.parse(Buffer.from(configuration.ADCP_CLIENT_SECRET, 'base64').toString('ascii')).secret;
   var REDIRECT_TO = configuration.ADCP_REDIRECT_TO;
   var MAX_PASSWORD_AGE = configuration.ADCP_MAX_PASS_AGE;
 
