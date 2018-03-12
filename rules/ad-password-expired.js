@@ -11,22 +11,22 @@ function (user, context, callback) {
   var MAX_PASSWORD_AGE = configuration.ADCP_MAX_PASS_AGE;
 
   if (context.protocol !== 'redirect-callback') {
-    
+    profile = getADProfile(user);
     // Require a password change every X days.
-    var last_change_date = getLastPasswordChange(user);
-    console.log('Last password change: ' + user.last_pwd_change);
+    var last_change_date = getLastPasswordChange(profile);
+    console.log('Last password change: ' + profile.last_pwd_change);
     console.log('Last password change: ' + last_change_date);
-    if (!user.hasOwnProperty("last_pwd_change") || (user.last_pwd_change > 0 && dayDiff(last_change_date, new Date()) <= MAX_PASSWORD_AGE)) {
+    if (!profile.hasOwnProperty("last_pwd_change") || (profile.last_pwd_change > 0 && dayDiff(last_change_date, new Date()) <= MAX_PASSWORD_AGE)) {
       return callback(null, user, context);
     }
     
     // Create token for the external site.
-    var sAMAccountName = user.sAMAccountName || user.username;
-    var email = user.email || sAMAccountName + '@shambhalamountain.org';
+    var sAMAccountName = profile.sAMAccountName || user.username;
+    var email = profile.email || sAMAccountName + '@shambhalamountain.org';
     var token = createToken(CLIENT_ID, CLIENT_SECRET, ISSUER, {
-      sub: user.user_id,
+      sub: profile.user_id,
       email: email,
-      emails: user.emails,
+      emails: profile.emails,
       validated: false,
       sAMAccountName: sAMAccountName,
       picture: user.picture,
@@ -66,6 +66,24 @@ function (user, context, callback) {
       });
   }
   
+  function getADProfile(user) {
+    if (user.sAMAccountName) {
+      return user;
+    }
+    if (!user.identities) {
+      console.log("User " + user.email + " has no identities!!!");
+      return user;
+    }
+    var idents = user.identities
+    for (var i = 0, len = idents.length; i < len; ++i) {
+      if (idents[i].provider == 'ad') {
+        return idents[i].profileData;
+      }
+    }
+    console.log("Failed to find AD provider for " + user.email);
+    return user;
+  }
+
   // Get the last password change from AD.
   function getLastPasswordChange(user) {
     var last_change = user.last_pwd_change || 0;
