@@ -11,7 +11,7 @@ function (user, context, callback) {
   var MAX_PASSWORD_AGE = configuration.ADCP_MAX_PASS_AGE;
 
   if (context.protocol !== 'redirect-callback') {
-    profile = getADProfile(user);
+    var profile = getADProfile(user);
     // Require a password change every X days.
     var last_change_date = getLastPasswordChange(profile);
     console.log('Last password change: ' + profile.last_pwd_change);
