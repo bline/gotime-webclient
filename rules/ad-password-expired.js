@@ -16,7 +16,7 @@ function (user, context, callback) {
     var last_change_date = getLastPasswordChange(user);
     console.log('Last password change: ' + user.last_pwd_change);
     console.log('Last password change: ' + last_change_date);
-    if (user.last_pwd_change > 0 && dayDiff(last_change_date, new Date()) <= MAX_PASSWORD_AGE) {
+    if (!user.hasOwnProperty("last_pwd_change") || (user.last_pwd_change > 0 && dayDiff(last_change_date, new Date()) <= MAX_PASSWORD_AGE)) {
       return callback(null, user, context);
     }
     
